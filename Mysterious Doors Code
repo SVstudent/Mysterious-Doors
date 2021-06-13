@@ -1,0 +1,128 @@
+import pygame
+from pygame.locals import (
+    K_UP,
+    K_DOWN,
+    K_LEFT,
+    K_RIGHT,
+    RLEACCEL,
+    K_ESCAPE,
+    KEYDOWN,
+    QUIT,
+)
+
+pygame.init()
+x = 800
+y = 600
+screen = pygame.display.set_mode((x, y))
+
+bg = pygame.image.load("House_Fire (4).png")
+
+B_doorImg = pygame.image.load('Blue_door.png')
+B_door_X = 100
+B_door_Y = 350
+
+Y_doorImg = pygame.image.load('Yellow_door.png')
+Y_door_X = 350
+Y_door_Y = 350
+
+R_doorImg = pygame.image.load('Red_door.png')
+R_door_X = 600
+R_door_Y = 350
+
+#Scenario texts
+font = pygame.font.Font('freesansbold.ttf', 18)
+
+text = font.render("Scenario: You are sleeping when the alarm bells in", True,
+                   (0, 0, 128))
+
+text1 = font.render(
+    "your house rang. You wake up to see fire and smoke all around you.", True,
+    (0, 0, 128))
+
+text2 = font.render(
+    "What would you do to escape from this predicament safely?", True,
+    (0, 0, 128))
+
+tX = 150
+tY = 70
+
+
+def B_door():
+    screen.blit(B_doorImg, (B_door_X, B_door_Y))
+
+
+def Y_door():
+    screen.blit(Y_doorImg, (Y_door_X, Y_door_Y))
+
+
+def R_door():
+    screen.blit(R_doorImg, (R_door_X, R_door_Y))
+
+
+class button():
+    def __init__(self, color, x, y, width, height, text=''):
+        self.color = color
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.text = text
+
+    def draw(self, win, outline=None):
+        #Call this method to draw the button on the screen
+        if outline:
+            pygame.draw.rect(
+                win, outline,
+                (self.x - 2, self.y - 2, self.width + 4, self.height + 4), 0)
+
+        pygame.draw.rect(win, self.color,
+                         (self.x, self.y, self.width, self.height), 0)
+
+        if self.text != '':
+            font = pygame.font.SysFont('comicsans', 60)
+            text = font.render(self.text, 1, (0, 0, 0))
+            win.blit(text,
+                     (self.x + (self.width / 2 - text.get_width() / 2),
+                      self.y + (self.height / 2 - text.get_height() / 2)))
+
+    def isOver(self, pos):
+        #Pos is the mouse position or a tuple of (x,y) coordinates
+        if pos[0] > self.x and pos[0] < self.x + self.width:
+            if pos[1] > self.y and pos[1] < self.y + self.height:
+                return True
+
+        return False
+
+
+# Variable to keep the main loop running
+running = True
+
+# Main loop
+while running:
+    #RGB
+    screen.fill((0, 0, 0))
+
+    # Look at every event in the queue
+    for event in pygame.event.get():
+        # Did the user hit a key?
+        if event.type == KEYDOWN:
+            # Was it the Escape key? If so, stop the loop.
+            if event.key == K_ESCAPE:
+                running = False
+        elif event.type == QUIT:
+            running = False
+    #Background Image
+
+    screen.blit(bg,(0,0))
+    
+    B_door()
+
+    R_door()
+
+    Y_door()
+
+    screen.blit(text, (tX, tY))  #Text 1
+    screen.blit(text1, (150, 100))
+    screen.blit(text2, (150, 130))
+
+    pygame.display.update()
